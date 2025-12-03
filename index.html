@@ -2,258 +2,599 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <!-- 适配移动端 -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>我的简单网页</title>
+    <title>风景欣赏 | 自然之美</title>
     <style>
         /* 基础样式重置 */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            scroll-behavior: smooth; /* 平滑滚动 */
         }
 
         body {
             font-family: "Arial", "微软雅黑", sans-serif;
-            background-color: #f5f7fa;
             color: #333;
+            background-color: #f0f4f8;
             line-height: 1.6;
         }
 
         /* 容器样式 */
         .container {
-            max-width: 800px;
-            margin: 50px auto;
+            max-width: 1200px;
+            margin: 0 auto;
             padding: 0 20px;
         }
 
-        /* 头部样式 */
+        /* 头部导航 */
         header {
-            text-align: center;
-            margin-bottom: 40px;
-            padding-bottom: 20px;
-            border-bottom: 1px solid #eee;
-        }
-
-        header h1 {
-            font-size: 2.2rem;
-            color: #2563eb;
-            margin-bottom: 10px;
-        }
-
-        header p {
-            color: #666;
-            font-size: 1.1rem;
-        }
-
-        /* 内容区域样式 */
-        .content {
-            background-color: white;
-            padding: 30px;
-            border-radius: 10px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 100;
+            background-color: rgba(255, 255, 255, 0.9);
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
         }
 
-        .profile {
+        .nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #165dff;
+            text-decoration: none;
             display: flex;
             align-items: center;
-            margin-bottom: 30px;
-            gap: 20px;
+            gap: 8px;
         }
 
-        .profile-img {
-            width: 120px;
-            height: 120px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 3px solid #2563eb;
+        .logo i {
+            font-style: normal;
+            color: #36cbcb;
         }
 
-        .profile-info h2 {
-            font-size: 1.5rem;
+        .nav-links {
+            display: flex;
+            gap: 30px;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #666;
+            font-size: 1rem;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: #165dff;
+        }
+
+        /* 轮播图区域（核心风景展示） */
+        .carousel {
+            margin-top: 70px;
+            height: 60vh;
+            min-height: 400px;
+            position: relative;
+            overflow: hidden;
+            border-radius: 12px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .carousel-item {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transition: opacity 1s ease;
+        }
+
+        .carousel-item.active {
+            opacity: 1;
+        }
+
+        .carousel-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* 保持图片比例，覆盖容器 */
+        }
+
+        .carousel-caption {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            padding: 30px;
+            background: linear-gradient(transparent, rgba(0, 0, 0, 0.7));
+            color: white;
+        }
+
+        .carousel-caption h2 {
+            font-size: 1.8rem;
             margin-bottom: 8px;
         }
 
-        .profile-info p {
-            color: #666;
-            margin-bottom: 10px;
-        }
-
-        /* 按钮样式 */
-        .btn {
-            display: inline-block;
-            padding: 10px 20px;
-            background-color: #2563eb;
-            color: white;
-            text-decoration: none;
-            border-radius: 5px;
-            transition: background-color 0.3s ease;
-            border: none;
-            cursor: pointer;
+        .carousel-caption p {
             font-size: 1rem;
+            opacity: 0.9;
         }
 
-        .btn:hover {
-            background-color: #1d4ed8;
-        }
-
-        /* 列表样式 */
-        .hobby-list {
-            margin: 20px 0;
-        }
-
-        .hobby-list h3 {
-            font-size: 1.3rem;
-            margin-bottom: 15px;
-            color: #2563eb;
-        }
-
-        .hobby-list ul {
-            list-style: none;
+        .carousel-control {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 40px;
+            height: 40px;
+            background-color: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border: none;
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
             display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
+            align-items: center;
+            justify-content: center;
         }
 
-        .hobby-list li {
-            background-color: #e0e7ff;
-            color: #2563eb;
-            padding: 8px 15px;
-            border-radius: 20px;
+        .carousel-control:hover {
+            background-color: rgba(255, 255, 255, 0.6);
         }
 
-        /* 底部样式 */
-        footer {
+        .prev {
+            left: 20px;
+        }
+
+        .next {
+            right: 20px;
+        }
+
+        /* 风景分类卡片区域 */
+        .scenery-section {
+            padding: 60px 0;
+        }
+
+        .section-title {
             text-align: center;
-            margin-top: 40px;
-            color: #999;
-            font-size: 0.9rem;
+            margin-bottom: 40px;
+            font-size: 2rem;
+            color: #2d3748;
+            position: relative;
         }
 
-        /* 弹窗样式（用于交互示例） */
-        .modal {
-            display: none; /* 默认隐藏 */
+        .section-title::after {
+            content: "";
+            display: block;
+            width: 80px;
+            height: 3px;
+            background-color: #165dff;
+            margin: 15px auto 0;
+            border-radius: 3px;
+        }
+
+        .scenery-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+        }
+
+        .card {
+            background-color: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 3px 15px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .card:hover .card-img {
+            transform: scale(1.05); /* hover时图片轻微放大 */
+        }
+
+        .card-content {
+            padding: 20px;
+        }
+
+        .card-title {
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+            color: #2d3748;
+        }
+
+        .card-desc {
+            color: #666;
+            font-size: 0.95rem;
+            margin-bottom: 15px;
+        }
+
+        .card-tag {
+            display: inline-block;
+            padding: 4px 10px;
+            background-color: #e8f3ff;
+            color: #165dff;
+            border-radius: 20px;
+            font-size: 0.8rem;
+        }
+
+        /* 图片预览弹窗 */
+        .preview-modal {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            justify-content: center;
+            background-color: rgba(0, 0, 0, 0.9);
+            z-index: 1000;
+            display: none;
             align-items: center;
+            justify-content: center;
+            padding: 20px;
         }
 
-        .modal-content {
-            background-color: white;
-            padding: 30px;
-            border-radius: 10px;
+        .preview-content {
+            max-width: 90%;
+            max-height: 90%;
+            border-radius: 8px;
+            position: relative;
+        }
+
+        .preview-img {
+            max-width: 100%;
+            max-height: 80vh;
+            object-fit: contain;
+        }
+
+        .close-preview {
+            position: absolute;
+            top: -40px;
+            right: 0;
+            color: white;
+            font-size: 2rem;
+            cursor: pointer;
+            background: none;
+            border: none;
+        }
+
+        /* 底部 */
+        footer {
+            background-color: #2d3748;
+            color: white;
+            padding: 40px 0;
+            margin-top: 40px;
+        }
+
+        .footer-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
             text-align: center;
-            width: 90%;
-            max-width: 400px;
         }
 
-        .modal-content h3 {
+        .footer-logo {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: #36cbcb;
+        }
+
+        .footer-desc {
+            color: rgba(255, 255, 255, 0.7);
+            max-width: 600px;
             margin-bottom: 20px;
-            color: #2563eb;
+        }
+
+        .copyright {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.5);
         }
 
         /* 响应式适配（手机端） */
         @media (max-width: 768px) {
-            .profile {
+            .carousel {
+                height: 45vh;
+                min-height: 300px;
+            }
+
+            .carousel-caption h2 {
+                font-size: 1.5rem;
+            }
+
+            .carousel-caption p {
+                font-size: 0.9rem;
+            }
+
+            .section-title {
+                font-size: 1.7rem;
+            }
+
+            .nav-links {
+                gap: 15px;
+            }
+
+            .card-img {
+                height: 180px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .nav {
                 flex-direction: column;
-                text-align: center;
+                gap: 10px;
+                padding: 10px 0;
             }
 
-            header h1 {
-                font-size: 1.8rem;
+            .carousel {
+                margin-top: 90px;
+                height: 40vh;
             }
 
-            .content {
-                padding: 20px;
+            .carousel-control {
+                width: 35px;
+                height: 35px;
+                font-size: 1rem;
+            }
+
+            .scenery-cards {
+                gap: 20px;
             }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <!-- 头部 -->
-        <header>
-            <h1>欢迎来到我的网页</h1>
-            <p>一个简单的HTML示例 · 包含样式和交互</p>
-        </header>
+    <!-- 头部导航 -->
+    <header>
+        <div class="container">
+            <nav class="nav">
+                <a href="#" class="logo">
+                    <i>🌿</i> 自然风景
+                </a>
+                <div class="nav-links">
+                    <a href="#home">首页</a>
+                    <a href="#scenery">风景分类</a>
+                    <a href="#about">关于</a>
+                </div>
+            </nav>
+        </div>
+    </header>
 
-        <!-- 主要内容 -->
-        <div class="content">
-            <!-- 个人信息 -->
-            <div class="profile">
-                <!-- 示例图片（可替换为自己的图片地址） -->
-                <img src="https://picsum.photos/seed/avatar/200/200" alt="个人头像" class="profile-img">
-                <div class="profile-info">
-                    <h2>小明</h2>
-                    <p>前端初学者 · 热爱技术 · 乐于分享</p>
-                    <button class="btn" id="showModalBtn">点击打招呼</button>
+    <!-- 轮播图区域 -->
+    <section id="home" class="container">
+        <div class="carousel">
+            <!-- 轮播图1：山川 -->
+            <div class="carousel-item active">
+                <img src="https://picsum.photos/seed/mountain/1200/600" alt="山川风景" class="carousel-img">
+                <div class="carousel-caption">
+                    <h2>巍峨山川</h2>
+                    <p>青山连绵，云雾缭绕，感受大自然的磅礴气势</p>
+                </div>
+            </div>
+            <!-- 轮播图2：湖泊 -->
+            <div class="carousel-item">
+                <img src="https://picsum.photos/seed/lake/1200/600" alt="湖泊风景" class="carousel-img">
+                <div class="carousel-caption">
+                    <h2>静谧湖泊</h2>
+                    <p>湖水清澈如镜，倒映蓝天白云，治愈心灵的净土</p>
+                </div>
+            </div>
+            <!-- 轮播图3：森林 -->
+            <div class="carousel-item">
+                <img src="https://picsum.photos/seed/forest/1200/600" alt="森林风景" class="carousel-img">
+                <div class="carousel-caption">
+                    <h2>茂密森林</h2>
+                    <p>绿树成荫，鸟语花香，沉浸式体验天然氧吧</p>
+                </div>
+            </div>
+            <!-- 轮播图4：海边 -->
+            <div class="carousel-item">
+                <img src="https://picsum.photos/seed/beach/1200/600" alt="海边风景" class="carousel-img">
+                <div class="carousel-caption">
+                    <h2>辽阔海岸</h2>
+                    <p>海浪拍岸，沙滩松软，感受大海的包容与壮阔</p>
                 </div>
             </div>
 
-            <!-- 兴趣爱好 -->
-            <div class="hobby-list">
-                <h3>我的兴趣爱好</h3>
-                <ul>
-                    <li>编程</li>
-                    <li>阅读</li>
-                    <li>运动</li>
-                    <li>旅行</li>
-                    <li>摄影</li>
-                </ul>
-            </div>
+            <!-- 轮播控制按钮 -->
+            <button class="carousel-control prev" id="prevBtn">←</button>
+            <button class="carousel-control next" id="nextBtn">→</button>
+        </div>
+    </section>
 
-            <!-- 简单介绍 -->
-            <div class="intro">
-                <h3>关于这个网页</h3>
-                <p>这是一个纯HTML+CSS+JS实现的简单网页，包含以下功能：</p>
-                <ul style="margin-left: 20px; margin-top: 10px; color: #666;">
-                    <li>响应式设计（适配电脑和手机）</li>
-                    <li>基础动画效果（按钮hover、弹窗）</li>
-                    <li>简单交互逻辑（点击按钮显示弹窗）</li>
-                </ul>
+    <!-- 风景分类卡片区域 -->
+    <section id="scenery" class="scenery-section">
+        <div class="container">
+            <h2 class="section-title">风景分类</h2>
+            <div class="scenery-cards">
+                <!-- 卡片1：山川 -->
+                <div class="card" data-img="https://picsum.photos/seed/mountain2/800/600" data-title="山川" data-desc="从雄伟的雪山到秀美的丘陵，每一座山都有独特的故事。">
+                    <div class="card-img-container">
+                        <img src="https://picsum.photos/seed/mountain2/400/300" alt="山川" class="card-img">
+                    </div>
+                    <div class="card-content">
+                        <h3 class="card-title">山川</h3>
+                        <p class="card-desc">雄伟壮丽，云雾缭绕，登高望远心旷神怡</p>
+                        <span class="card-tag">自然奇观</span>
+                    </div>
+                </div>
+                <!-- 卡片2：湖泊 -->
+                <div class="card" data-img="https://picsum.photos/seed/lake2/800/600" data-title="湖泊" data-desc="湖水湛蓝，周围绿树环绕，是休闲度假的理想之地。">
+                    <div class="card-img-container">
+                        <img src="https://picsum.photos/seed/lake2/400/300" alt="湖泊" class="card-img">
+                    </div>
+                    <div class="card-content">
+                        <h3 class="card-title">湖泊</h3>
+                        <p class="card-desc">清澈如镜，倒映美景，治愈心灵的宁静之地</p>
+                        <span class="card-tag">休闲度假</span>
+                    </div>
+                </div>
+                <!-- 卡片3：森林 -->
+                <div class="card" data-img="https://picsum.photos/seed/forest2/800/600" data-title="森林" data-desc="郁郁葱葱的树木，清新的空气，是天然的氧吧和动植物的家园。">
+                    <div class="card-img-container">
+                        <img src="https://picsum.photos/seed/forest2/400/300" alt="森林" class="card-img">
+                    </div>
+                    <div class="card-content">
+                        <h3 class="card-title">森林</h3>
+                        <p class="card-desc">绿树成荫，鸟语花香，感受原始自然的生机</p>
+                        <span class="card-tag">生态之旅</span>
+                    </div>
+                </div>
+                <!-- 卡片4：海边 -->
+                <div class="card" data-img="https://picsum.photos/seed/beach2/800/600" data-title="海边" data-desc="金色沙滩，蔚蓝大海，海浪声伴你度过惬意时光。">
+                    <div class="card-img-container">
+                        <img src="https://picsum.photos/seed/beach2/400/300" alt="海边" class="card-img">
+                    </div>
+                    <div class="card-content">
+                        <h3 class="card-title">海边</h3>
+                        <p class="card-desc">海浪拍岸，海风拂面，体验大海的辽阔与自由</p>
+                        <span class="card-tag">海滨度假</span>
+                    </div>
+                </div>
             </div>
         </div>
+    </section>
 
-        <!-- 底部 -->
-        <footer>
-            <p>© 2024 我的简单网页 · 版权所有</p>
-        </footer>
-    </div>
+    <!-- 关于区域 -->
+    <section id="about" class="container" style="padding: 20px 0 60px;">
+        <div class="card" style="max-width: 800px; margin: 0 auto;">
+            <div class="card-content">
+                <h3 class="card-title" style="text-align: center; margin-bottom: 20px;">关于风景欣赏</h3>
+                <p class="card-desc" style="line-height: 1.8;">
+                    这里汇集了世界各地的绝美风景，从巍峨山川到辽阔海岸，从静谧湖泊到茂密森林。
+                    大自然的鬼斧神工造就了无数令人惊叹的景观，每一处风景都有其独特的魅力，
+                    既能让人感受磅礴气势，也能带来心灵的宁静。希望这个网页能让你在忙碌的生活中，
+                    找到一片属于自己的自然净土，放松身心，感受自然之美。
+                </p>
+            </div>
+        </div>
+    </section>
 
-    <!-- 弹窗（交互示例） -->
-    <div class="modal" id="greetingModal">
-        <div class="modal-content">
-            <h3>你好呀！👋</h3>
-            <p>欢迎访问我的简单网页～</p>
-            <button class="btn" id="closeModalBtn" style="margin-top: 20px;">关闭</button>
+    <!-- 图片预览弹窗 -->
+    <div class="preview-modal" id="previewModal">
+        <div class="preview-content">
+            <img src="" alt="风景预览" class="preview-img" id="previewImg">
+            <button class="close-preview" id="closePreviewBtn">×</button>
         </div>
     </div>
+
+    <!-- 底部 -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">🌿 自然风景欣赏</div>
+                <p class="footer-desc">
+                    感受自然之美，探索世界风景。让每一次浏览都成为一次心灵的旅行。
+                </p>
+                <div class="copyright">
+                    © 2024 风景欣赏 | 版权所有
+                </div>
+            </div>
+        </div>
+    </footer>
 
     <script>
-        // 简单交互：弹窗控制
-        const showModalBtn = document.getElementById('showModalBtn');
-        const closeModalBtn = document.getElementById('closeModalBtn');
-        const modal = document.getElementById('greetingModal');
+        // 1. 轮播图自动切换 + 手动控制
+        const carouselItems = document.querySelectorAll('.carousel-item');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        let currentIndex = 0;
+        const carouselInterval = 5000; // 5秒切换一次
 
-        // 点击显示弹窗
-        showModalBtn.addEventListener('click', () => {
-            modal.style.display = 'flex';
+        // 切换轮播图函数
+        function showSlide(index) {
+            // 隐藏所有轮播项
+            carouselItems.forEach(item => item.classList.remove('active'));
+            // 显示当前轮播项
+            carouselItems[index].classList.add('active');
+            currentIndex = index;
+        }
+
+        // 下一张轮播图
+        function nextSlide() {
+            let newIndex = (currentIndex + 1) % carouselItems.length;
+            showSlide(newIndex);
+        }
+
+        // 上一张轮播图
+        function prevSlide() {
+            let newIndex = (currentIndex - 1 + carouselItems.length) % carouselItems.length;
+            showSlide(newIndex);
+        }
+
+        // 自动切换
+        let intervalId = setInterval(nextSlide, carouselInterval);
+
+        // 手动控制按钮事件
+        nextBtn.addEventListener('click', () => {
+            clearInterval(intervalId); // 清除自动切换
+            nextSlide();
+            intervalId = setInterval(nextSlide, carouselInterval); // 重新启动自动切换
         });
 
-        // 点击关闭弹窗
-        closeModalBtn.addEventListener('click', () => {
-            modal.style.display = 'none';
+        prevBtn.addEventListener('click', () => {
+            clearInterval(intervalId);
+            prevSlide();
+            intervalId = setInterval(nextSlide, carouselInterval);
         });
+
+        // 2. 卡片点击预览大图
+        const cards = document.querySelectorAll('.card');
+        const previewModal = document.getElementById('previewModal');
+        const previewImg = document.getElementById('previewImg');
+        const closePreviewBtn = document.getElementById('closePreviewBtn');
+
+        // 打开预览
+        cards.forEach(card => {
+            card.addEventListener('click', () => {
+                const imgUrl = card.getAttribute('data-img');
+                previewImg.src = imgUrl;
+                previewModal.style.display = 'flex';
+                // 禁止页面滚动
+                document.body.style.overflow = 'hidden';
+            });
+        });
+
+        // 关闭预览
+        function closePreview() {
+            previewModal.style.display = 'none';
+            document.body.style.overflow = 'auto'; // 恢复页面滚动
+        }
+
+        closePreviewBtn.addEventListener('click', closePreview);
 
         // 点击弹窗外部关闭
-        window.addEventListener('click', (e) => {
-            if (e.target === modal) {
-                modal.style.display = 'none';
+        previewModal.addEventListener('click', (e) => {
+            if (e.target === previewModal) {
+                closePreview();
+            }
+        });
+
+        // 3. 导航栏滚动效果（可选，增强体验）
+        window.addEventListener('scroll', () => {
+            const header = document.querySelector('header');
+            if (window.scrollY > 50) {
+                header.style.backgroundColor = 'rgba(255, 255, 255, 0.95)';
+                header.style.boxShadow = '0 3px 15px rgba(0, 0, 0, 0.1)';
+            } else {
+                header.style.backgroundColor = 'rgba(255, 255, 255, 0.9)';
+                header.style.boxShadow = '0 2px 10px rgba(0, 0, 0, 0.05)';
             }
         });
     </script>
